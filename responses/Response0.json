@@ -1,0 +1,82 @@
+{
+  "apMacAddress": "00:2b:01:00:08:00",
+  "areaGlobalIdList": [
+    70,
+    3,
+    2,
+    1,
+    16,
+    17,
+    58,
+    71,
+    90,
+    60
+  ],
+  "band": "IEEE_802_11_B",
+  "bytesReceived": 120,
+  "bytesSent": 132,
+  "changedOn": 1493986871214,
+  "confidenceFactor": 24,
+  "currentlyTracked": true,
+  "detectingControllers": "10.10.20.90",
+  "dot11Status": "ASSOCIATED",
+  "geoCoordinate": null,
+  "guestUser": false,
+  "historyLogReason": null,
+  "ipAddress": ["10.10.20.211"],
+  "macAddress": "00:00:2a:01:00:34",
+  "manufacturer": "Trw",
+  "mapCoordinate": {
+    "unit": "FEET",
+    "x": 46.18373,
+    "y": 57.70667,
+    "z": 0
+  },
+  "mapInfo": {
+    "floorDimension": {
+      "height": 16.5,
+      "length": 81.9,
+      "offsetX": 0,
+      "offsetY": 0,
+      "unit": "FEET",
+      "width": 307
+    },
+    "floorRefId": "723413320329068590",
+    "image": {
+      "colorDepth": 8,
+      "height": 544,
+      "imageName": "domain_0_1421088463647.png",
+      "maxResolution": 8,
+      "size": 2038,
+      "width": 2038,
+      "zoomLevel": 4
+    },
+    "mapHierarchyString": "DevNetCampus>DevNetBuilding>DevNetZone>Test",
+    "tagList": [
+      "Entrance",
+      "Coffee & Snack"
+    ]
+  },
+  "networkStatus": "ACTIVE",
+  "rawLocation": {
+    "rawX": -999,
+    "rawY": -999,
+    "unit": "FEET"
+  },
+  "sourceTimestamp": null,
+  "ssId": "test",
+  "statistics": {
+    "currentServerTime": "2017-05-05T13:21:12.699+0100",
+    "firstLocatedTime": "2017-04-27T00:08:33.262+0100",
+    "lastLocatedTime": "2017-05-05T13:21:11.214+0100",
+    "maxDetectedRssi": {
+      "antennaIndex": 0,
+      "apMacAddress": "00:2b:01:00:08:00",
+      "band": "IEEE_802_11_B",
+      "lastHeardInSeconds": 3,
+      "rssi": -30,
+      "slot": 0
+    }
+  },
+  "userName": ""
+}

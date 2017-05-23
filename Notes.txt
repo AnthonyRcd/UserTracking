@@ -8,11 +8,23 @@ https://cmxlocationsandbox.cisco.com/api/location/v1/clients/00:00:2a:01:00:34
 En gros, pour tout ce qui concerne l'API Location, utiliser la forme:
 https://<MSE IP Address>:<Port>/api/location/v1/<function>
 
-Idem pour les requêtes GET de l'API Analytics
+Idem pour les requï¿½tes GET de l'API Analytics
 
-* Override la méthode steVariables dans chaque sous-classe et ajouter les caracs propres
-* Modifier le fichier de config et mettre des sections contenant l'url approprié en fonction de l'option à utiliser
-* Récupérer l'ensemble des clefs du json de chaque fonction et les mettre dans un fichier pour créer les enums
+* Override la mï¿½thode steVariables dans chaque sous-classe et ajouter les caracs propres
+* Modifier le fichier de config et mettre des sections contenant l'url appropriï¿½ en fonction de l'option ï¿½ utiliser
+* Rï¿½cupï¿½rer l'ensemble des clefs du json de chaque fonction et les mettre dans un fichier pour crï¿½er les enums
+
+Controlleur Wi-Fi:
+QWERTY username = wlc
+QWERTY password = Teleco,&
+
+CMX:
+QWERTY username = cmxadmin
+QWERTY password = Teleco,&
+
+PI:
+QWERTY username = admin
+QWERTY password = Telecom&
 
 
 

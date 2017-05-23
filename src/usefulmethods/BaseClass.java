@@ -1,5 +1,7 @@
 package usefulmethods;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +11,8 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.URL;
 import java.util.Enumeration;
+
+import javax.imageio.ImageIO;
 
 import org.ini4j.Ini;
 import org.json.JSONException;
@@ -50,7 +54,7 @@ public class BaseClass {
      * Initialization of the fields.
      * @author Anthony Ricard
      */
-	protected static void setVariables(){
+	protected static void setVariables(String function){
 
 		/* ----- D�but de lecture du fichier de config -----*/
 		
@@ -58,7 +62,7 @@ public class BaseClass {
 		username = config.get("mse", "username");
 		password = config.get("mse", "password");
 		authentication = Base64.encode(String.join(":",username,password).getBytes());
-		url_suffix = config.get("mse", "url_suffix");
+		url_suffix = config.get(function, "url_suffix");
 		mac = config.get("local", "mac");
 		response_format = config.get("local", "response_format");
 		plotly_username = config.get("plotly", "plotly_username");
@@ -74,7 +78,7 @@ public class BaseClass {
 	 * @author Anthony Ricard
 	 *
 	 */
-	protected enum Options{
+	protected enum UserOptions{
 		
 		//User options
 		locate("mapCoordinate"),
@@ -82,7 +86,20 @@ public class BaseClass {
 		detectedBy("detectingControllers"),
 		locatedAt("mapInfo"),
 		identifyUser("userName"),
-		userType("guestUser"),
+		userType("guestUser");
+		
+		protected final String jsonKey;
+		
+		public String getJsonKey() {
+			return jsonKey;
+		}
+
+		UserOptions(final String text){
+			this.jsonKey=text;
+		}	
+	}
+	
+	protected enum MapOptions{
 		
 		//Map options
 		floorId("floorRefId"),
@@ -96,10 +113,9 @@ public class BaseClass {
 			return jsonKey;
 		}
 
-		Options(final String text){
+		MapOptions(final String text){
 			this.jsonKey=text;
 		}	
-		
 	}
 	
 	/**
@@ -173,22 +189,89 @@ public class BaseClass {
 		return address;
 	}
 	
-	/*
-	// Si on veut enregistrer les JSON dans des fichiers
-	String file_prefix = "./responses/Response";
-	String file_suffix = ".json";
-	String filename = null;
-	
-	
-	for(int i=0;i<1;i++){
-		 filename = file_prefix + i + file_suffix;
-		System.out.println(getInformation(url, Options.locate));
-		saveJSON(getResponse(url),filename);
+	public static BufferedImage retrieveMapImage(String imagename){
 		try {
-			TimeUnit.SECONDS.sleep(1);
-		} catch (InterruptedException e) {
+			config = ConfigReader.readConfig("./configs/config3.ini");
+		} catch (Exception e) {
+			System.err.println("Erreur lors de l'ouverture du fichier.");
+		} 
+		
+		setVariables("map");
+		String url = String.join("",url_prefix,mse_ip,url_suffix,imagename) ;
+		HTTPMethods.SSLHandler();
+		
+		HttpURLConnection connection;
+		try {
+			connection = (HttpURLConnection) new URL(url).openConnection();
+			HTTPMethods.setMapHeaders(connection, url, charset, authentication);
+			BufferedImage image = ImageIO.read(connection.getInputStream());
+			return image;
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		return null;		
 	}
-	*/
+
+	public static boolean saveImage(String imagename){
+		BufferedImage image = retrieveMapImage(imagename);
+		try {
+			ImageIO.write(image, "jpg",new File(String.join("","./resources/",imagename)));
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	
+	public static Object getInformation(String url,UserOptions option){
+		JSONObject json = getResponse(url);
+		switch(option){
+		case locate: {
+			double abs = 0;
+			double ord = 0;
+			try {
+				abs = json.getJSONObject(option.getJsonKey()).getDouble("x");
+				ord = json.getJSONObject(option.getJsonKey()).getDouble("y");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		
+			return new Point(abs,ord); //returns a "Point" Object
+		}
+		
+		default:
+			try {
+				return json.get(option.getJsonKey());
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			} 
+			/* return types:
+			 * ip_address: String[1]
+			 * detectedBy: String
+			 * locatedAt: JSONObject
+			 * identifyUser: String
+			*/
+		}
+	}
+	
+	public static Object getMapInformation(String url, MapOptions option){
+		JSONObject json = (JSONObject) getInformation(url,UserOptions.locatedAt);
+		if (option.equals(MapOptions.image))
+		{
+			JSONObject temp = (JSONObject) getMapInformation(url,MapOptions.imageInfo);
+			return temp.opt("imageName");
+		}
+		try {
+			return json.get(option.getJsonKey());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 }
